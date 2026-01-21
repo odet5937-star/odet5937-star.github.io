@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Soldadito del Amor</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(#87bfff, #f7b2d9);
+  text-align: center;
+}
+.hidden { display: none; }
+button {
+  padding: 15px 25px;
+  margin: 10px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+#menu button {
+  width: 200px;
+  background: #333;
+  color: white;
+}
+canvas {
+  background: #c2b280;
+  border: 3px solid #333;
+}
+.card {
+  background: white;
+  margin: 20px auto;
+  padding: 20px;
+  width: 80%;
+  border-radius: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PANTALLA INICIO -->
+<div id="inicio">
+  <h1>🪖 Soldadito del Amor 💖</h1>
+  <p>El soldadito te saluda y va a cumplir misiones por amor</p>
+  <p>🐱 Gatito cálico te acompaña</p>
+  <button onclick="irMenu()">Entrar al Juego</button>
+</div>
+
+<!-- MENU PRINCIPAL -->
+<div id="menu" class="hidden">
+  <h2>Elige una puerta</h2>
+  <button onclick="abrir('amor')">❤️ Cartitas</button><br>
+  <button onclick="abrir('puzzle')">🧩 Laberinto</button><br>
+  <button onclick="abrir('civil')">🏠 Vida diaria</button><br>
+  <button onclick="abrir('guerra')">🔫 Guerra</button><br>
+  <button onclick="volver()">⬅ Volver</button>
+</div>
+
+<!-- CARTITAS -->
+<div id="amor" class="hidden card">
+  <h2>❤️ Cartitas del Amor</h2>
+  <p id="mensaje"></p>
+  <button onclick="nuevaCarta()">Nueva cartita</button><br><br>
+  <button onclick="volverMenu()">⬅ Menú</button>
+</div>
+
+<!-- LABERINTO -->
+<div id="puzzle" class="hidden card">
+  <h2>🧩 Mini Laberinto</h2>
+  <p>Imagina que el soldadito cruza el laberinto por ti 💖</p>
+  <p>🎁 Recompensa: Agua y comida</p>
+  <button onclick="volverMenu()">⬅ Menú</button>
+</div>
+
+<!-- VIDA DIARIA -->
+<div id="civil" class="hidden card">
+  <h2>🏠 Vida de Civil</h2>
+  <p>El soldadito descansa, piensa en ti y planea el futuro 💌</p>
+  <p>Puede leer cartas, soñar y sonreír</p>
+  <button onclick="volverMenu()">⬅ Menú</button>
+</div>
+
+<!-- GUERRA -->
+<div id="guerra" class="hidden">
+  <h2>🔫 Campo de Batalla</h2>
+  <p>Haz clic para disparar al enemigo</p>
+  <canvas id="game" width="300" height="300"></canvas><br>
+  <p id="resultado"></p>
+  <button onclick="volverMenu()">⬅ Menú</button>
+</div>
+
+<script>
+const cartas = [
+  "Te amo más que ayer 💖",
+  "Eres mi soldadito valiente 🪖",
+  "Gracias por existir 🌷",
+  "Siempre contigo, en cada misión 💌",
+  "Nuestro amor gana todas las guerras ❤️"
+];
+
+function irMenu() {
+  inicio.classList.add("hidden");
+  menu.classList.remove("hidden");
+}
+
+function volver() {
+  menu.classList.add("hidden");
+  inicio.classList.remove("hidden");
+}
+
+function abrir(seccion) {
+  menu.classList.add("hidden");
+  document.getElementById(seccion).classList.remove("hidden");
+}
+
+function volverMenu() {
+  document.querySelectorAll("div").forEach(d => d.classList.add("hidden"));
+  menu.classList.remove("hidden");
+}
+
+function nuevaCarta() {
+  mensaje.innerText = cartas[Math.floor(Math.random()*cartas.length)];
+}
+
+// JUEGO GUERRA SIMPLE
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+let enemigo = {x: 120, y: 120, size: 30};
+
+function dibujar() {
+  ctx.clearRect(0,0,300,300);
+  ctx.fillStyle = "red";
+  ctx.fillRect(enemigo.x, enemigo.y, enemigo.size, enemigo.size);
+}
+
+canvas.addEventListener("click", e => {
+  const r = canvas.getBoundingClientRect();
+  const x = e.clientX - r.left;
+  const y = e.clientY - r.top;
+
+  if (
+    x > enemigo.x && x < enemigo.x + enemigo.size &&
+    y > enemigo.y && y < enemigo.y + enemigo.size
+  ) {
+    resultado.innerText = "🎉 ¡Misión cumplida! Amor ganado";
+    enemigo.x = Math.random()*250;
+    enemigo.y = Math.random()*250;
+  }
+  dibujar();
+});
+
+dibujar();
+</script>
+
+</body>
+</html>
